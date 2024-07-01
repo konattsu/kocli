@@ -1,0 +1,15 @@
+[package]
+name = "kocli"
+version = "0.1.0"
+edition = "2021"
+description = "CLI tools to help you work with VScode"
+
+[dependencies]
+clap = { version = "4.5.4", features = ["derive"] }
+copypasta = "0.10.1"
+rodio = "0.19.0"
+rand = { version = "0.8.5", features = ["std", "small_rng"] }
+toml = "0.8.13"
+serde = { version = "1.0.203", features = ["derive"] }
+chrono = {version = "0.4.38", features = ["serde"]}
+serde_json = "1.0.118"

@@ -1,0 +1,148 @@
+----- https://www.jma.go.jp/bosai/common/const/area.json -----
+
+## brief
+centers[center]: でっかい地方ごとの管轄。api不可。
+offices[office]: 上の物を細分化したもの。api基本的に可能。
+class10s, class15s: よく分からん。api不可。
+class20s: 市の名前が書いてある。ここのみidは7桁。api不可
+
+それぞれに"name", "enName"があり、"parent", "children"は基本的にもつ。
+6桁(7桁)の番号をkeyとし、valueにdictとして様々な情報がある。
+
+
+## detail
+center:
+    範囲は010100~011000。
+    prefix:2桁で01。そのあと2桁を使用し01から割り当て。suffix:2桁で00。
+office:
+    範囲は011000~474000。
+    prefix:2桁で設置されている箇所の都道府県コード。そのあとは*基本的に*4桁で0000。
+    例外
+        同一都道府県に複数観測するやつがあるとき。?000となり1から割り当て。
+        "測候所"というのが"気象台"の代わりに使用されるとき。2か所のみで[014030: 帯広測候所], [460040: 名瀬測候所]。これはapiで呼び出せない。
+        [014100: 釧路地方気象台], [460100: 鹿児島地方気象台]。原因不明。apiで呼べる。
+    東京の気象台130000は気象庁(本部)。
+
+
+## predict
+
+----- https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json -----
+
+
+#define TI "時刻,ISO 8601準拠"  // suffixとして使う
+#define WC "https://plaza.rakuten.co.jp/rabbit77/3000/"  // weatherCodesより
+#define BS "文節区切りにU+3000の空白が含まれる,"  // badSpaceより
+#define ... "複数になる可能性がある"
+#define AREA "area": { "name": "分からん", "code": "6桁" }
+
+[
+    {
+        "publishingOffice": "気象台名",
+        "reportDatetime": "最新の情報に更新されたTI"
+        "timeSeries": [
+            {
+                "timeDefines": [
+                    "最新の情報に更新されたTI",  // e.g. 20日17時
+                    "上の次の日のTI",          // e.g. 21日0時
+                    "上の次の日のTI"           // e.g. 22日0時
+                ],
+                "areas": [
+                    {
+                        AREA,
+                        "weatherCodes": ["100", "100", "100"]  // WC
+                        "weathers": ["", "", ""]  // BS,ちょっとWCより詳しい
+                        "winds": ["", "", ""]  // BS
+                        "waves": ["", "", ""]  // 波の高さ,数字記号は全角,BS,無い場合もある
+                    }...
+                ]
+            },
+            {
+                "timeDefines": [
+                    // 値が5つ,[0,6,12,18時]のどれかのTI
+                    // 一番近い値から5つが使用される
+                ],
+                "areas": [
+                    {
+                        AREA,
+                        "pops": [""*5] // 多分降水確率
+                    }...
+                ]
+            },
+            {
+                "timeDefines": [
+                    "",  // TI, 情報不足
+                    ""
+                ],
+                "areas": [
+                    {
+                        AREA,
+                        "temps": ["", ""] // 気温
+                    }...
+                ]
+            }
+        ]
+    },
+    {
+        "publishingOffice": "気象台名",
+        "reportDatetime": "最新の情報に更新されたTI",
+        "timeSeries: [
+            {
+                "timeDefines: [
+                    "次の日の午前0時から7日分"
+                ],
+                "areas": [
+                    {
+                        AREA,
+                        "weatherCodes": WC,
+                        "pops": "降水確率",
+                        "reliabilities": "確信度A>B>Cで""のときは多分確信度100%"
+                    }
+                ]
+            },
+            {
+                "timeDefines" [
+                    "次の日の午前0時から7日分"
+                ],
+                "areas": [
+                    {
+                        AREA,
+                        "tempMin": [],  // 始めの値は""となる
+                        "tempsMinUpper": [],
+                        "tempsMinLower": [],
+                        "tempsMax": [],
+                        "tempsMaxUpper": [],
+                        "tempsMaxLower": [],
+                    }
+                ]
+            }
+        ],
+        "tempAverage": {
+            "areas": [
+                {
+                    AREA,
+                    "min": "str型,摂氏,20.3"
+                    "max": "上と同様"
+                }...
+            ]
+        },
+        "precipAverage": {
+            "areas": [
+                {
+                    AREA,
+                    "min": "str型,華氏,20.3",
+                    "max": "上と同様"
+                }...
+            ]
+        }
+    }
+]
+
+
+----- https://www.jma.go.jp/bosai/forecast/data/overview_forecast/130000.json -----
+{
+    "publishingOffice": "気象台名",
+    "reportDatetime": "2024-06-28T16:38:00+09:00",  ISO 8601
+    "targetArea": "都道府県名",
+    "headlineText": "",
+    "text": "翌々日ぐらいまでの概要。都会のやつほど文章が長い"
+}
