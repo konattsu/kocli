@@ -2,7 +2,6 @@ use super::file_rename::FileRename;
 use std::{fs, io, path};
 
 use crate::features::utils::config_loader::ConfigLoader;
-// use super::super::utils::config_loader::ConfigLoader; // どっちでも可
 use serde::{de::DeserializeOwned, Deserialize};
 
 #[derive(Deserialize)]
@@ -51,7 +50,6 @@ where
         return Ok(path::PathBuf::from(dir));
     }
 
-    // Turbofish
     let config = T::load_config::<Config>()?;
 
     let dirname = path::PathBuf::from(config.rand_img.directory);

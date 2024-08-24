@@ -18,7 +18,7 @@ enum Commands {
     /// Plays a notification sound
     Remind(RemindArgs),
     /// Slash as delimiter of copied paths from explorer
-    ConvertPath,
+    Path,
     /// Shuffle images in folder
     RandImg(RandImgArgs),
 }
@@ -61,7 +61,7 @@ fn main() {
             };
             play_sound::run(Audio::new(audio_file), playback_secs, delay_secs);
         }
-        Commands::ConvertPath => {
+        Commands::Path => {
             convert::run();
         }
         Commands::RandImg(rand_img_args) => {

@@ -1,0 +1,7 @@
+#! このファイルがある場所を KOCLI_SETTINGS をキーとして環境変数に追加する必要がある
+
+[rand_img]
+directory = ""
+
+[remind]
+directory = ""

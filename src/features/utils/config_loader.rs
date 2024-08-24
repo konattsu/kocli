@@ -1,4 +1,4 @@
-use std::{fs, io};
+use std::{env, fs, io};
 
 use serde::de::DeserializeOwned;
 
@@ -8,7 +8,9 @@ pub trait ConfigLoader {
     where
         T: DeserializeOwned,
     {
-        let content = fs::read_to_string("./settings/kocli_settings.toml")?;
+        let settings_path =
+            env::var("KOCLI_SETTINGS").expect("KOCLI_SETTINGS must be set");
+        let content = fs::read_to_string(&settings_path)?;
         let config: T = toml::from_str(&content)
             .map_err(|e| io::Error::new(io::ErrorKind::Other, e.to_string()))?;
         Ok(config)

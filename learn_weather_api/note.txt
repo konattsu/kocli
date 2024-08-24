@@ -106,7 +106,7 @@ office:
                 "areas": [
                     {
                         AREA,
-                        "tempMin": [],  // 始めの値は""となる
+                        "tempsMin": [],  // 始めの値は""となる,(7つともすべて)
                         "tempsMinUpper": [],
                         "tempsMinLower": [],
                         "tempsMax": [],
